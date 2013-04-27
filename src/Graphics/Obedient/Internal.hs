@@ -1,20 +1,22 @@
 {-# LANGUAGE EmptyDataDecls #-}
 module Graphics.Obedient.Internal where
-
+import Diagrams.Core.Points
+import Diagrams.TwoD.Types
 data Behavior a 
 data Event a 
-data Point
 
-clickLeft :: Event Point
+type Point2D = Point R2
+
+clickLeft :: Event Point2D
 clickLeft = undefined
 
-clickRight :: Event Point
+clickRight :: Event Point2D
 clickRight = undefined
 
-clickMiddle :: Event Point
+clickMiddle :: Event Point2D
 clickMiddle = undefined
 
-mousePosition :: Behavior Point
+mousePosition :: Behavior Point2D
 mousePosition = undefined
 
 data ScrollDirection 
