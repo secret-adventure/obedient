@@ -4,8 +4,8 @@ version:       0.1
 license:       BSD3
 cabal-version: >= 1.10
 license-file:  LICENSE
-author:        Jonathan Fischoff
-maintainer:    Jonathan Fischoff <jonathangfischoff@gmail.com>
+author:        Jonathan Fischoff, Gabriel Gonzalez, Tikhon Jelvis
+maintainer:    Jonathan Fischoff <jonathangfischoff@gmail.com>, Gabriel Gonzalez <Gabriel439@gmail.com>, Tikhon Jelvis <tikhon@jelv.is>
 stability:     experimental
 homepage:      http://github.com/secret-adventure/obedient/
 bug-reports:   http://github.com/secret-adventure/obedient/issues
