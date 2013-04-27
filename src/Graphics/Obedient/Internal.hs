@@ -2,8 +2,9 @@
 module Graphics.Obedient.Internal where
 import Diagrams.Core.Points
 import Diagrams.TwoD.Types
-data Behavior a 
-data Event a 
+import Control.Proxy.FRP 
+
+data Behavior a
 
 type Point2D = Point R2
 

@@ -37,6 +37,7 @@ library
       base >= 4.4 && < 5
     , diagrams-core == 0.6.*
     , diagrams-lib  == 0.6.* 
+    , pipes-frp     == 1.*
 
 test-suite testcases
    type:    exitcode-stdio-1.0
@@ -51,6 +52,7 @@ test-suite testcases
       , test-framework-th == 0.2.*
       , HUnit == 1.2.*
       , test-framework-hunit == 0.3.*
+      , pipes-frp     == 1.*
    
    hs-source-dirs: tests, src
 
