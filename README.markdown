@@ -1,7 +1,7 @@
 foo
 ===
 
-[![Build Status](https://secure.travis-ci.org/ekmett/foo.png?branch=master)](http://travis-ci.org/ekmett/foo)
+[![Build Status](https://secure.travis-ci.org/secret-adventure/obedient.png?branch=master)](http://travis-ci.org/secret-adventure/obedient)
 
 Contact Information
 -------------------
