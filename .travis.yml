@@ -16,7 +16,7 @@ script:
 notifications:
   irc:
     channels:
-      - "irc.freenode.org#haskell-lens"
+      - "irc.freenode.org#secret-adventure"
     skip_join: true
     template:
       - "\x0313foo\x03/\x0306%{branch}\x03 \x0314%{commit}\x03 %{build_url} %{message}"
