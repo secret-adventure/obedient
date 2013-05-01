@@ -1,34 +1,23 @@
 {-# LANGUAGE EmptyDataDecls #-}
 module Graphics.Obedient.Internal where
-import Diagrams.Core.Points
-import Diagrams.TwoD.Types
-import Control.Proxy.FRP 
 
-data Behavior a
+import           Control.Proxy.FRP    (Behavior (..), Event (..))
+import qualified Control.Proxy.FRP    as FRP
+
+import           Diagrams.Core.Points
+import           Diagrams.TwoD.Types
 
 type Point2D = Point R2
 
-clickLeft :: Event Point2D
-clickLeft = undefined
-
-clickRight :: Event Point2D
-clickRight = undefined
-
-clickMiddle :: Event Point2D
-clickMiddle = undefined
-
-mousePosition :: Behavior Point2D
-mousePosition = undefined
-
-data ScrollDirection 
+data ScrollDirection
    = ScrollUp
-   | ScrollDown
+   | ScrollDown deriving (Show, Eq, Enum)
 
-mouseScroll :: Event ScrollDirection
-mouseScroll = undefined
-
-
-
-
-
-               
+-- This could be used nicely with record wildcard patterns:
+-- Input { .. } = initialize foo bar
+data Inputs = Inputs { quitEvent     :: Event ()
+                     , leftClick     :: Event Point2D
+                     , rightClick    :: Event Point2D
+                     , middleClick   :: Event Point2D
+                     , mouseScroll   :: Event ScrollDirection
+                     , mousePosition :: Behavior Point2D }
