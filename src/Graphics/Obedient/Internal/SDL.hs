@@ -2,52 +2,37 @@ module Graphics.Obedient.Internal.SDL where
 
 import           Control.Applicative
 import           Control.Monad
-import           Control.Monad.Trans       (lift)
-import           Control.Monad.Trans.Class ()
-import           Control.Proxy
-import           Control.Proxy.Concurrent
-import           Control.Proxy.FRP         (Behavior (..), Event (..))
+import           Control.Proxy.FRP         (Event (..))
 import qualified Control.Proxy.FRP         as FRP
 
 import           Diagrams.Core.Points
 import           Diagrams.TwoD.Types
 
 import qualified Graphics.UI.SDL           as SDL
-import qualified Graphics.UI.SDL.Events    as SDL
-
-import           System.Exit
 
 import           Graphics.Obedient.Internal
 
 -- | Creates an SDL window with the given dimensions and returns a
 --   stream of all of the events from the window.
 initSDL :: Int -> Int -> Event (SDL.Event)
-initSDL width height = Event $ \ () -> runIdentityP $ do
-  lift $ do
-    SDL.init [SDL.InitEverything]
-    SDL.setVideoMode width height 32 []
-  forever $ do
-    event <- lift SDL.waitEvent
-    respond event
-
-  -- Prints every string in the event. Just for debugging for now.
-runApp :: Event String -> IO ()
-runApp (Event proxy) = runProxy $ proxy >-> foreverK printStrs
-  where printStrs () = request () >>= lift . putStrLn
+initSDL width height = FRP.extractIO $ do
+  SDL.init [SDL.InitEverything]
+  SDL.setVideoMode width height 32 []
+  return $ FRP.fromIO SDL.waitEvent
 
   -- TODO: Maybe allow specifying other options using a record, or
   -- something...
-initializeWindow :: Int -> Int -> Inputs
+initializeWindow :: Int -> Int -> App
 initializeWindow width height =
-  Inputs { quitEvent     = void $ FRP.filter (== SDL.Quit) events
-         , leftClick     = FRP.mapMaybe (mouseDown SDL.ButtonLeft) events
-         , rightClick    = FRP.mapMaybe (mouseDown SDL.ButtonRight) events
-         , middleClick   = FRP.mapMaybe (mouseDown SDL.ButtonMiddle) events
-         , mouseScroll   = FRP.mapMaybe mouseWheel events
-         , mousePosition = FRP.behave mouseStart $ FRP.mapMaybe mouseMove events -- XXX: Get initial position properly.
-         }
+  App { quitEvent     = void $ FRP.filter (== SDL.Quit) events
+      , leftClick     = FRP.mapMaybe (mouseDown SDL.ButtonLeft) events
+      , rightClick    = FRP.mapMaybe (mouseDown SDL.ButtonRight) events
+      , middleClick   = FRP.mapMaybe (mouseDown SDL.ButtonMiddle) events
+      , mouseScroll   = FRP.mapMaybe mouseWheel events
+      , mousePosition = FRP.behaveIO mouseStart $ FRP.mapMaybe mouseMove events
+      }
   where events = initSDL width height
-        mouseStart = point (0, 0)
+        mouseStart = (\ (x, y, _) -> point (x, y)) <$> SDL.getMouseState
 
 -- | Transforms the given integral coordinates into a two-dimensional
 --   point.
