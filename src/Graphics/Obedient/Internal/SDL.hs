@@ -1,24 +1,19 @@
+{-# LANGUAGE RecordWildCards #-}
 module Graphics.Obedient.Internal.SDL where
 
 import           Control.Applicative
+import           Control.Concurrent         (threadDelay)
+import           Control.Concurrent.STM
 import           Control.Monad
-import           Control.Proxy.FRP         (Event (..))
-import qualified Control.Proxy.FRP         as FRP
+import           Control.Proxy.FRP          (Behavior (..))
+import qualified Control.Proxy.FRP          as FRP
 
 import           Diagrams.Core.Points
 import           Diagrams.TwoD.Types
 
-import qualified Graphics.UI.SDL           as SDL
+import qualified Graphics.UI.SDL            as SDL
 
 import           Graphics.Obedient.Internal
-
--- | Creates an SDL window with the given dimensions and returns a
---   stream of all of the events from the window.
-initSDL :: Int -> Int -> Event (SDL.Event)
-initSDL width height = FRP.extractIO $ do
-  SDL.init [SDL.InitEverything]
-  SDL.setVideoMode width height 32 []
-  return $ FRP.fromIO SDL.waitEvent
 
   -- TODO: Maybe allow specifying other options using a record, or
   -- something...
@@ -30,10 +25,23 @@ initializeWindow width height =
       , middleClick   = FRP.mapMaybe (mouseDown SDL.ButtonMiddle) events
       , mouseScroll   = FRP.mapMaybe mouseWheel events
       , mousePosition = FRP.behaveIO mouseStart $ FRP.mapMaybe mouseMove events
+      , render        = void . render
       }
-  where events = initSDL width height
-        mouseStart = (\ (x, y, _) -> point (x, y)) <$> SDL.getMouseState
+  where initial = do SDL.init [SDL.InitEverything]
+                     surface <- SDL.setVideoMode width height 32 []
+                     return (surface, FRP.fromIO SDL.waitEvent)
+        events = FRP.extractIO $ snd <$> initial
 
+        mouseStart = (\ (x, y, _) -> point (x, y)) <$> SDL.getMouseState
+        
+        render (Behavior rectSTM) = forever $ do
+          threadDelay 3000
+          rect <- rectSTM >>= atomically
+          surface <- fst <$> initial
+          SDL.fillRect surface (Just $ toRect rect) (SDL.Pixel 0x3366FF)
+          SDL.flip surface
+        toRect (Rectangle {..}) = SDL.Rect x y width height
+          
 -- | Transforms the given integral coordinates into a two-dimensional
 --   point.
 point :: Integral a => (a, a) -> Point2D

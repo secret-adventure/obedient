@@ -8,6 +8,9 @@ import           Diagrams.TwoD.Types
 
 type Point2D = Point R2
 
+-- A trivial geometric type standing in for Diagrams or whatever.
+data Rectangle = Rectangle { x, y, width, height :: Int } 
+
 data ScrollDirection
    = ScrollUp
    | ScrollDown deriving (Show, Eq, Enum)
@@ -19,4 +22,6 @@ data App = App { quitEvent     :: Event ()
                , rightClick    :: Event Point2D
                , middleClick   :: Event Point2D
                , mouseScroll   :: Event ScrollDirection
-               , mousePosition :: Behavior Point2D }
+               , mousePosition :: Behavior Point2D
+               , render        :: Behavior Rectangle -> IO ()
+               }
