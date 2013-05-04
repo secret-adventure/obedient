@@ -35,7 +35,7 @@ initializeWindow width height =
         mouseStart = (\ (x, y, _) -> point (x, y)) <$> SDL.getMouseState
         
         render (Behavior rectSTM) = forever $ do
-          threadDelay 3000
+          threadDelay 10000
           rect <- rectSTM >>= atomically
           surface <- fst <$> initial
           SDL.fillRect surface (Just $ toRect rect) (SDL.Pixel 0x3366FF)

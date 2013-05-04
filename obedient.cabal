@@ -1,6 +1,6 @@
 name:          obedient
 category:      FRP
-version:       0.1
+version:       0.1.1
 license:       BSD3
 cabal-version: >= 1.10
 license-file:  LICENSE
@@ -38,6 +38,7 @@ library
     , diagrams-core == 0.6.*
     , diagrams-lib  == 0.6.* 
     , pipes-frp     == 1.*
+    , stm == 2.4.*
     
 executable Example
     main-is: Example.hs
@@ -51,6 +52,7 @@ executable Example
       , SDL           == 0.6.*
       , pipes-concurrency == 1.0.*
       , pipes             == 3.2.*
+      , stm == 2.4.*
       , transformers      == 0.3.*
       , mtl               == 2.1.*
 
